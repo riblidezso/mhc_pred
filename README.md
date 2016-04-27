@@ -43,6 +43,6 @@ NetMHCpan |0.9176 | 0.8830
 new: xgboost | 0.9212 | 0.9042
 new: 2layer net | **0.9259** | **0.9049**
 
-- The new model has passed the state of the art
+- The new models have passed the state of the art
 
 ---
