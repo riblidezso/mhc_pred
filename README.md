@@ -29,3 +29,20 @@
 - linear regression
 - k nearest neighbor regression
 
+
+## Benchmark with state of the art
+
+- based on this article: http://www.ncbi.nlm.nih.gov/pubmed/25017736
+- Recreated the benchmark with new models, and taken the numbers form the supplementary
+
+Method | CV | Blind test
+--- | --- | ---
+SMMPMBEC | 0.8989 | 0.8474
+NetMHC | 0.8930 | 0.8833
+NetMHCpan |0.9176 | 0.8830
+new: xgboost | 0.9212 | 0.9042
+new: 2layer net | **0.9259** | **0.9049**
+
+- The new model has passed the state of the art
+
+---
