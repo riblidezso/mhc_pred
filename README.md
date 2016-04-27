@@ -1,4 +1,4 @@
-# MHC-I pepdite binding prediction
+# MHC-I peptide binding prediction
 
 ## Data:
 - http://tools.iedb.org/main/datasets/
