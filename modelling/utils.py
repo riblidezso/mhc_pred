@@ -5,6 +5,12 @@ import pandas as pd
 
 from sklearn import preprocessing
 
+from sklearn.cross_validation import KFold
+from sklearn.cross_validation import train_test_split
+
+from keras.callbacks import ModelCheckpoint,EarlyStopping
+
+import xgboost as xgb
 
 def load_data(hla_representation='simple',seq_representation='simple'):
     start=time.time()
@@ -71,3 +77,87 @@ def encode_seq(x_in,representation):
         x_out=np.column_stack([[blosum_dict[x_temp[i,j]] for i in xrange(len(x_in)) ] for j in range(maxlen)])
 
     return x_out
+
+
+
+
+"""Cross validation functions for keras.
+
+People usually do not cross validate when they have to train for days, but
+"""
+
+def my_keras_fit_predict(get_model,X_train,y_train,X_test,
+                      validation_split=0.1,patience=1,nb_epoch=100,**kwargs):
+    """Fit model on train test set with early stopping."""
+    #get model
+    model=None
+    model=get_model(X_train.shape[1])
+    
+    #callbacks
+    best_model=ModelCheckpoint('best_model',save_best_only=True,verbose=1)
+    early_stop=EarlyStopping(patience=patience,verbose=1)
+
+    #train it
+    callb_hist=model.fit(X_train,y_train,nb_epoch = nb_epoch,
+                            validation_split=validation_split,
+                            callbacks=[best_model,early_stop],**kwargs)
+    #predict
+    model.load_weights('best_model')
+    y_pred_test=model.predict(X_test).ravel()
+    
+    return y_pred_test
+
+
+def my_keras_cv_predict(get_model,x,y,n_folds=3,**kwargs):
+    """Evaluate model with cross validation."""
+    #res
+    y_pred=np.zeros(len(y))
+    #folds
+    for train_index,test_index in KFold(len(x),n_folds=n_folds):
+        #data split
+        x_train,y_train,x_test=x[train_index],y[train_index],x[test_index]
+        #fit predict
+        y_pred[test_index]=my_keras_fit_predict(get_model,x_train,y_train,x_test,**kwargs)
+    return y_pred
+
+
+
+"""Cross valdiation with xgb too."""
+
+def my_xgb_fit_predict(params,X_train,y_train,X_test,
+                       num_boost_round=5000,verbose_eval=500,
+                       early_stopping_rounds=200,
+                       validation_size=0.1,**kwargs):
+    """Fit model on train test set with early stopping."""
+    #validation data for early stopping
+    X_train, X_valid, y_train, y_valid = train_test_split(X_train, y_train, test_size=validation_size)
+    
+    #convert to data format for xgb
+    dtrain = xgb.DMatrix( X_train, label=y_train)
+    dvalid = xgb.DMatrix( X_valid, label=y_valid)
+    dtest = xgb.DMatrix( X_test )
+    
+    #printed evals
+    evallist  = [(dtrain,'train'),(dvalid,'eval')]
+
+    #lets train
+    bst = xgb.train(params,dtrain,evals=evallist,
+                    num_boost_round=num_boost_round,
+                    early_stopping_rounds=early_stopping_rounds,
+                    verbose_eval=verbose_eval)
+    
+    y_pred_test=bst.predict(dtest)
+    return y_pred_test
+
+
+def my_xgb_cv_predict(params,x,y,n_folds=3,**kwargs):
+    """Evaluate model with cross validation."""
+    #res
+    y_pred=np.zeros(len(y))
+    #folds
+    for train_index,test_index in KFold(len(x),n_folds=n_folds):
+        #data split
+        x_train,y_train,x_test=x[train_index],y[train_index],x[test_index]
+        #fit predict
+        y_pred[test_index]=my_xgb_fit_predict(params,x_train,y_train,x_test,**kwargs)
+    return y_pred
