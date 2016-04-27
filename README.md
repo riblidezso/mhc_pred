@@ -6,7 +6,10 @@
 - see xplore/explore.ipynb for details
 
 ## Modelling:
-- details in modelling folder 
+- details in modelling folders:
+	- modelling: regression models
+	- modelling_class: classification models
+	- modelling_benchmark: recreating a benchmark from an article to compare with state of the art models
 
 ### xgboost:
 - http://xgboost.readthedocs.org/en/latest/
