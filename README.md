@@ -48,5 +48,10 @@ new: 2layer net | 0.9259 | 0.9049
 new: xgboost sparse | **0.9283** | **0.9057**
 
 - The new models have passed the state of the art
+	- Please note that i did not tune the models excessively to fit this particular dataset
+		- 2layer net was not tuned at all, 512 is the first and only number of units i have tried
+		- xgboost was only tried with 2-3 depth values, no extensive hyperparameter tuning was used
+	- by tuning the models one could improve the scores on this dataset, but this would not be completely fair, because i think the other models have not tuned themself
+		- altough self tuning with hyperparameter search could/should part of a best performing model 
 
 ---
