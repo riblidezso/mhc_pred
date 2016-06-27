@@ -2,12 +2,12 @@
 
 ## Data:
 - http://tools.iedb.org/main/datasets/
-- basically pepdite seq, hla allele names, and a target value
+- basically pepdite seq, hla allele names, and a target IC50 value
 - see xplore/explore.ipynb for details
 
 ## Modelling:
 - details in modelling folders:
-	- modelling: regression models
+	- modelling_reg: regression models
 	- modelling_class: classification models
 	- modelling_benchmark: recreating a benchmark from an article to compare with state of the art models
 
