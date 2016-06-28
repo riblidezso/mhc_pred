@@ -22,15 +22,18 @@ import seaborn as sns
 def load_all_data(hla_representation='simple',species_representation='simple',
                   seq_representation='simple'):
     """Load all data."""
+    #load data with train test 
     x_train,y_train,y_train_c,x_test,y_test,y_test_c=load_data(
         hla_representation=hla_representation,
         species_representation=species_representation,
         seq_representation=seq_representation)
 
+    #concatenate the sets
     all_x=np.concatenate([x_train,x_test],axis=0)
     all_y=np.concatenate([y_train,y_test],axis=0)
     all_y_c=np.concatenate([y_train_c,y_test_c],axis=0)
 
+    #shuffle them
     rng=np.random.RandomState(42)
     perm=rng.permutation(len(all_y))
     x=all_x[perm]
@@ -41,12 +44,11 @@ def load_all_data(hla_representation='simple',species_representation='simple',
 
 
 def load_data(hla_representation='simple',species_representation='simple',
-              seq_representation='simple'):
+              seq_representation='simple',verbose=False):
     """Load train/blind test data as in the benchmark."""
     start=time.time()
     
     #load train data
-    print 'Reading from file...'
     dataf='benchmark_mhci_reliability/binding/bd2009.1/bdata.2009.mhci.public.1.txt'
     t_data=pd.read_csv(dataf,sep='\t')
     
@@ -61,7 +63,6 @@ def load_data(hla_representation='simple',species_representation='simple',
     #concat them
     data=pd.concat([t_data,b_data])
      
-    print 'Creating representation...'
     #encode hla
     x_train_hla=encode(data.mhc.values,t_data.mhc.values,hla_representation)
     x_test_hla=encode(data.mhc.values,b_data.mhc.values,hla_representation)
@@ -107,9 +108,12 @@ def load_data(hla_representation='simple',species_representation='simple',
     y_test_c=np.ones(len(y_test))
     y_test_c[y_test>=np.log10(500)]=0
     
-    print 'Using ',len(x_train),' training data points'
-    print 'Using ',len(x_test),' testing data points'
-    print 'Done, It took:',time.time()-start,'s'
+    #report if asked for
+    if verbose:
+        print 'Using ',len(x_train),' training data points'
+        print 'Using ',len(x_test),' testing data points'
+        print 'Done, It took:',time.time()-start,'s'
+        
     return x_train,y_train,y_train_c,x_test,y_test,y_test_c
 
 
@@ -211,7 +215,7 @@ def my_keras_fit_predict(get_model,X_train,y_train,X_test,
     return y_pred_test
 
 
-def my_keras_cv_predict(get_model,x,y,n_folds=3,**kwargs):
+def my_keras_cv_predict(get_model,x,y,n_folds=3,shuffle=True,seed=42,**kwargs):
     """
     Evaluate model with cross validation.
     
@@ -220,7 +224,8 @@ def my_keras_cv_predict(get_model,x,y,n_folds=3,**kwargs):
     #res
     y_pred=np.zeros(len(y))
     #folds
-    for train_index,test_index in KFold(len(x),n_folds=n_folds):
+    for train_index,test_index in KFold(len(x),n_folds=n_folds,
+                                        shuffle=shuffle,random_state=np.random.RandomState(seed)):
         #data split
         x_train,y_train,x_test=x[train_index],y[train_index],x[test_index]
         #fit predict
@@ -257,12 +262,13 @@ def my_xgb_fit_predict(params,X_train,y_train,X_test,
     return y_pred_test
 
 
-def my_xgb_cv_predict(params,x,y,n_folds=3,**kwargs):
+def my_xgb_cv_predict(params,x,y,n_folds=3,shuffle=True,seed=42,**kwargs):
     """Evaluate model with cross validation."""
     #res
     y_pred=np.zeros(len(y))
     #folds
-    for train_index,test_index in KFold(len(x),n_folds=n_folds):
+    for train_index,test_index in KFold(len(x),n_folds=n_folds,
+                                        shuffle=shuffle,random_state=np.random.RandomState(seed)):
         #data split
         x_train,y_train,x_test=x[train_index],y[train_index],x[test_index]
         #fit predict
