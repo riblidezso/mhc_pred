@@ -9,3 +9,9 @@ I used all data points even if they only have (<,> measurement values).
 - XGBoost
 - using one-hot encoding
 - encoding HLA alleles, serotypes
+
+
+### More thorough preformance evaluation
+
+xgboost_sample_result.py evaluate a training on different random CV splits.
+This might take long time, but because of the high variance of the performance its essential.
