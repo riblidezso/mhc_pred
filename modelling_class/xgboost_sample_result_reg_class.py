@@ -12,6 +12,7 @@ Now the seeds are going from 0,1,2,3... for reproducibility.
 #load modules
 import os,sys
 from sklearn.metrics import roc_auc_score
+import numpy as np
 
 #command line arguments
 representations=sys.argv[1]
