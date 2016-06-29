@@ -20,7 +20,7 @@ work_dir=sys.argv[3] #'/data/data1/ribli/mhc/'
 
 #load my functions
 sys.path.append('../')
-from utils import load_all_data,my_xgb_cv_predict,corr_plot
+from utils_xgb import load_all_data,my_xgb_cv_predict
 
 #go to working dir
 os.chdir(work_dir)
