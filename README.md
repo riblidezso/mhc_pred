@@ -43,9 +43,8 @@ Method | CV | Blind test
 SMMPMBEC | 0.8989 | 0.8474
 NetMHC | 0.8930 | 0.8833
 NetMHCpan |0.9176 | 0.8830
-new: xgboost dense | 0.9212 | 0.9042
-new: 2layer net | 0.9259 | 0.9049
-new: xgboost sparse | **0.9283** | **0.9057**
+new: 2layer net | 0.9244 | 0.9540
+new: xgboost sparse | **0.9320** | **0.9092**
 
 - The new models have passed the state of the art
 	- Please note that i did not tune the models excessively to fit this particular dataset
