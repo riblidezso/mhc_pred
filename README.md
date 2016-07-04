@@ -43,7 +43,7 @@ Method | CV | Blind test
 SMMPMBEC | 0.8989 | 0.8474
 NetMHC | 0.8930 | 0.8833
 NetMHCpan |0.9176 | 0.8830
-new: 2layer net | 0.9244 | 0.9540
+new: 2layer net | 0.9244 | 0.9054
 new: xgboost | **0.9320** | **0.9092**
 
 - The new models have passed the state of the art
