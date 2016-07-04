@@ -1,8 +1,4 @@
 import os
-#theano cpu now (not used)
-#override this when using keras!
-os.environ['THEANO_FLAGS']='device=cpu'
-
 import time
 import numpy as np
 import pandas as pd
