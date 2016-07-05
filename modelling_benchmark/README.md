@@ -7,6 +7,6 @@ I used all the available datapoints from both group of data.
 I used all data points even if they only have (<,> measurement values).
 
 ### Best results:
-- XGBoost
+- stacking XGBoost and Neural network
 - using one-hot encoding
 - encoding HLA alleles, serotypes
