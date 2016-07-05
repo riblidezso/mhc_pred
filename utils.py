@@ -5,6 +5,7 @@ import pandas as pd
 from sklearn import preprocessing
 from sklearn.cross_validation import KFold
 from sklearn.cross_validation import train_test_split
+from sklearn.utils import resample
 from keras.callbacks import ModelCheckpoint,EarlyStopping
 import xgboost as xgb
 from sklearn import metrics
@@ -302,3 +303,15 @@ def corr_plot(y_reg,y_reg_pred):
 
     from scipy.stats import pearsonr
     print 'Correlation:',pearsonr(y_reg,y_reg_pred)[0]
+    
+    
+    
+def bootstrap_auc(y_c,y_pred,N=100):
+    """Bootstrap the AUC score."""
+    scores=[]
+    for i in xrange(N):
+        res_y=resample(np.column_stack([y_c,y_pred]))
+        scores.append(roc_auc_score(res_y[:,0],res_y[:,1]))
+        
+    print 'Score is :', '%.4f' % np.mean(scores),
+    print '+-','%.4f' % np.std(scores)
